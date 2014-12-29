@@ -27,7 +27,6 @@ describe 'scalarInput', ->
     afterEach -> 
       $('#testEnvelope').remove()
 
-
     describe 'select element', -> 
 
       it "isn't added if no units specified", -> 
@@ -62,6 +61,13 @@ describe 'scalarInput', ->
         si = $('#testTarget').scalarInput({units: ['meters', 'inches']})
         select = si.next()
         expect(select.prop('disabled')).toBe false
+
+      it 'is added before magnitude if prefixed specified', -> 
+        si = $('#testTarget').scalarInput({prefixed: true, units: ['meters', 'inches']})
+        select = si.prev()
+        empty = si.next()
+        expect(select.is('select')).toBe true
+        expect(empty.length).toBe 0
 
     describe 'option elements', -> 
 
@@ -131,6 +137,10 @@ describe 'scalarInput', ->
         expect(scalarInstance.val()).toEqual '20 meters'
         inputUnit.val 'feet'
         expect(scalarInstance.val()).toEqual '20 feet'
+
+      it 'can have default format overridden', -> 
+        scalarInstance.options.valueFormat = '{{unit}} were {{magnitude}}'
+        expect(scalarInstance.val()).toEqual 'meters were 10'
 
   describe 'change event', -> 
 
